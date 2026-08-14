@@ -194,6 +194,32 @@ El archivo `views_and_queries.sql` incluye ocho consultas que cubren distintos r
 
 ---
 
-## 9. Conclusiones
+## 9. Recomendaciones para la Expansión Futura del Sistema
+
+- **Gestión de usuarios y roles**: incorporar una tabla de usuarios con roles diferenciados (vendedor, bodeguero, administrador) para controlar quién puede registrar pedidos, modificar precios o consultar reportes, apoyada en permisos a nivel de base de datos.
+
+- **Historial de estados del pedido**: agregar un campo o tabla de estados (pendiente, confirmado, despachado, entregado, cancelado) para dar trazabilidad al ciclo de vida completo del pedido, no solo a su registro inicial.
+
+- **Manejo de devoluciones**: crear una tabla `DEVOLUCIONES` relacionada con `DETALLE_PEDIDO`, junto con un trigger que reintegre el stock correspondiente al producto devuelto, complementando la lógica ya existente de descuento de inventario.
+
+- **Reposición automática de inventario**: diseñar una tabla de órdenes de compra a proveedores y un procedimiento almacenado que genere sugerencias de reabastecimiento a partir de `vista_productos_bajo_stock`.
+
+- **Gestión de proveedores**: añadir una tabla `PROVEEDORES` y una relación con `PRODUCTOS`, permitiendo registrar de dónde se abastece cada producto y su costo de compra, como base para calcular márgenes de utilidad.
+
+- **Auditoría extendida**: replicar el patrón de `AUDITORIA_PRECIOS` para otras tablas sensibles, como cambios en `stock_actual` fuera del flujo normal de pedidos o modificaciones a los datos de clientes.
+
+- **Índices y optimización**: evaluar la creación de índices adicionales sobre columnas de alta frecuencia de consulta, como `fecha_pedido`, `id_cliente` en `PEDIDOS` y `categoria` en `PRODUCTOS`, a medida que crezca el volumen de datos.
+
+- **Procedimientos almacenados para operaciones compuestas**: encapsular en `PROCEDURE` operaciones que hoy dependen de varias sentencias desde la aplicación cliente, por ejemplo la creación de un pedido junto con todos sus detalles en una sola transacción.
+
+- **Manejo explícito de transacciones**: incorporar bloques `START TRANSACTION` / `COMMIT` / `ROLLBACK` en las operaciones de inserción de pedidos con múltiples productos, de modo que si un detalle falla por stock insuficiente, no queden registros parciales del mismo pedido.
+
+- **Reportes y análisis histórico**: extender las vistas actuales con reportes por rango de fechas configurable, comparativos mes a mes, y proyecciones de demanda basadas en el histórico de `DETALLE_PEDIDO`, como insumo para decisiones de compra e inventario.
+
+- **Internacionalización de la tarifa de IVA**: parametrizar el porcentaje de IVA (actualmente fijo en 19% dentro de la función) mediante una tabla de configuración, facilitando ajustes futuros sin modificar el código de la función.
+
+---
+
+## 10. Conclusiones
 
 El diseño implementado traslada a la base de datos las reglas de negocio críticas de la distribuidora: cálculo de subtotales, control de inventario, actualización de totales con IVA y auditoría de cambios de precio. Esto reduce la dependencia de la aplicación cliente para mantener la integridad de los datos y garantiza que dichas reglas se cumplan sin importar el origen de la operación (aplicación, script o consola). Las vistas y consultas desarrolladas cubren las necesidades operativas de consulta de inventario, seguimiento de clientes y análisis de ventas por sede.
