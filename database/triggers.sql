@@ -47,7 +47,7 @@ FOR EACH ROW
 BEGIN
     UPDATE PEDIDOS
     SET total_sin_iva = fn_calcular_total_sin_iva(NEW.id_pedido),
-        total_con_iva = fn_calcular_total_con_iva(NEW.id_pedido)
+        total_con_iva = fn_calcular_total_con_iva_dinamico(NEW.id_pedido, 0.19)
     WHERE id_pedido = NEW.id_pedido;
 END //
 
