@@ -53,9 +53,6 @@ Usa ORDER BY y LIMIT 5 para presentar los resultados en orden descendente.
 
 ```SQL
 
-USE GaseosasDelValle;
-
--- consulta examen
 SELECT 
     c.nombre_completo AS nombre_cliente,
     COUNT(p.id_pedido) AS cantidad_pedidos,
@@ -79,7 +76,6 @@ Debe garantizar que cada pedido nuevo quede auditado correctamente.
 ```SQL
 
 -- Estructura de la tabla de auditoria:
-SQL
 
 CREATE TABLE IF NOT EXISTS auditoria_pedidos (
     id_auditoria INT AUTO_INCREMENT PRIMARY KEY,
@@ -90,8 +86,8 @@ CREATE TABLE IF NOT EXISTS auditoria_pedidos (
     usuario_responsable VARCHAR(100)
 );
 
+
 -- Creacion del Trigger:
-SQL
 
 DELIMITER //
 
