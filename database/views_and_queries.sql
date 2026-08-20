@@ -2,7 +2,7 @@ USE GaseosasDelValle;
 
 UPDATE PEDIDOS
 SET total_sin_iva = fn_calcular_total_sin_iva(id_pedido),
-    total_con_iva = fn_calcular_total_con_iva(id_pedido);
+    total_con_iva = fn_calcular_total_con_iva_dinamico(id_pedido, 0.19);
 
 -- CREACIÓN DE VISTAS (CREATE VIEW)
 
