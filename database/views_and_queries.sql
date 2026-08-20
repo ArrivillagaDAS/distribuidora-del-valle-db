@@ -2,7 +2,7 @@ USE GaseosasDelValle;
 
 UPDATE PEDIDOS
 SET total_sin_iva = fn_calcular_total_sin_iva(id_pedido),
-    total_con_iva = fn_calcular_total_con_iva(id_pedido);
+    total_con_iva = fn_calcular_total_con_iva_dinamico(id_pedido, 0.19);
 
 -- CREACIÓN DE VISTAS (CREATE VIEW)
 
@@ -93,12 +93,11 @@ FROM CLIENTES c
 JOIN PEDIDOS p ON c.id_cliente = p.id_cliente
 GROUP BY c.id_cliente, c.nombre_completo
 HAVING COUNT(p.id_pedido) = (
-    SELECT MAX(conteo)
-    FROM (
-        SELECT COUNT(id_pedido) AS conteo
-        FROM PEDIDOS
-        GROUP BY id_cliente
-    ) AS sub
+    SELECT COUNT(id_pedido) AS conteo
+    FROM PEDIDOS
+    GROUP BY id_cliente
+    ORDER BY conteo DESC
+    LIMIT 1
 );
 
 -- 8. Consultar pedidos y sus totales agrupados por sede.
